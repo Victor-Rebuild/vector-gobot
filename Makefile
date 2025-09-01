@@ -3,10 +3,10 @@ COMPILEFILE := ./examples/body/readout.go
 ABSPATH := $(shell pwd)
 
 ifeq ($(GCC),)
-  TOOLCHAIN_DIR := $(ABSPATH)/vic-toolchain/arm-linux-gnueabi/bin
-  TOOLCHAIN := $(TOOLCHAIN_DIR)/arm-linux-gnueabi-
-  GCC := ${TOOLCHAIN}gcc
-  GPP := ${TOOLCHAIN}g++
+  TOOLCHAIN_DIR := $(HOME)/.anki/vicos-sdk/dist/5.3.0-r07/prebuilt/bin
+  TOOLCHAIN := $(TOOLCHAIN_DIR)/arm-oe-linux-gnueabi-
+  GCC := ${TOOLCHAIN}clang
+  GPP := ${TOOLCHAIN}clang++
   ifeq ($(shell test -d $(dir $(TOOLCHAIN_DIR)) && echo yes),)
     $(error The directory $(dir $(TOOLCHAIN_DIR)) does not exist. You must define a $$TOOLCHAIN or follow the README instructions to get a toolchain.)
   endif

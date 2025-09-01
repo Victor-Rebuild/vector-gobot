@@ -106,6 +106,16 @@ func StopSpine() {
 }
 
 /*
+Turns the robot off.
+This is immediate. When this is run, power gets cut.
+*/
+func ShutBodyDown() {
+	if spineInited {
+		C.shut_body_down()
+	}
+}
+
+/*
 Use LED_GREEN, LED_BLUE, and LED_RED consts as reference.
 */
 func SetLEDs(front uint32, middle uint32, back uint32) error {
@@ -218,8 +228,7 @@ func startCommsLoop() error {
 /*
 Get a frame channel. In your code, you should use it like:
 
-frameChan := GetFrameChan()
-
+	frameChan := GetFrameChan()
 	for frame := range frameChan {
 		<do whatever you need to with frame>
 		<this will repeat whenever a new frame is ready>
@@ -246,8 +255,7 @@ func SetMotors(m1 int16, m2 int16, m3 int16, m4 int16) error {
 Get a button press channel.
 Sends true when press, false when released.
 
-frameChan := GetButtonChannel()
-
+	frameChan := GetButtonChannel()
 	for frame := range frameChan {
 		<do whatever you need to with frame>
 		<this will repeat whenever a new frame is ready>

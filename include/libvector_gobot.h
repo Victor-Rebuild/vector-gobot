@@ -16,6 +16,7 @@ spine_dataframe_t iterate();
 void init_lcd();
 void set_pixels(uint16_t *pixels);
 void set_pixels_midas(uint16_t *pixels);
+void shut_body_down();
 bool is_midas();
 
 typedef struct IMUData {

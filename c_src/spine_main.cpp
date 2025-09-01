@@ -220,6 +220,10 @@ spine_dataframe_t iterate() {
     return spine_data;
 }
 
+void shut_body_down() {
+    spine_shutdown(spine_handle);
+}
+
 void spine_full_update(uint32_t seq, int16_t* motors_data, uint32_t* leds_data) {
     spine_update(spine_handle, seq, 0, motors_data, leds_data);
 }
