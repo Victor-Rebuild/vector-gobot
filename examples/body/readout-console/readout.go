@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/inancgumus/screen"
-	"github.com/kercre123/vector-gobot/pkg/vbody"
+	"github.com/os-vector/vector-gobot/pkg/vbody"
 )
 
 func main() {

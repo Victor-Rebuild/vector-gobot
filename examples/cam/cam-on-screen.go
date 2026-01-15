@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kercre123/vector-gobot/pkg/vcam"
-	"github.com/kercre123/vector-gobot/pkg/vjpeg"
-	"github.com/kercre123/vector-gobot/pkg/vscreen"
+	"github.com/os-vector/vector-gobot/pkg/vcam"
+	"github.com/os-vector/vector-gobot/pkg/vjpeg"
+	"github.com/os-vector/vector-gobot/pkg/vscreen"
 )
 
 func GetFrameAsUint16Array(rawData []byte, width int, height int) []uint16 {

@@ -4,11 +4,11 @@ This is a Go wrapper for [poc.vic-hack](https://github.com/torimos/poc.vic-hack)
 
 ## Modules
 
--   [vcam](https://pkg.go.dev/github.com/kercre123/vector-gobot/pkg/vcam)
--   [vbody](https://pkg.go.dev/github.com/kercre123/vector-gobot/pkg/vbody)
--   [vimu](https://pkg.go.dev/github.com/kercre123/vector-gobot/pkg/vimu)
--   [vscreen](https://pkg.go.dev/github.com/kercre123/vector-gobot/pkg/vscreen)
--   [vjpeg](https://pkg.go.dev/github.com/kercre123/vector-gobot/pkg/vjpeg)
+-   [vcam](https://pkg.go.dev/github.com/os-vector/vector-gobot/pkg/vcam)
+-   [vbody](https://pkg.go.dev/github.com/os-vector/vector-gobot/pkg/vbody)
+-   [vimu](https://pkg.go.dev/github.com/os-vector/vector-gobot/pkg/vimu)
+-   [vscreen](https://pkg.go.dev/github.com/os-vector/vector-gobot/pkg/vscreen)
+-   [vjpeg](https://pkg.go.dev/github.com/os-vector/vector-gobot/pkg/vjpeg)
     -   Meant to be used in conjunction with vcam.
     -   Takes a camera frame, unpacks it, debayers it, and converts it to JPEG as fast as possible with turbojpeg.
     -   Needs an extra lib to be built.
@@ -18,7 +18,7 @@ This is a Go wrapper for [poc.vic-hack](https://github.com/torimos/poc.vic-hack)
 1. Clone the repo (with submodules):
 
 ```
-git clone --recurse-submodules https://github.com/kercre123/vector-gobot
+git clone --recurse-submodules https://github.com/os-vector/vector-gobot
 ```
 
 2. Build the libs:

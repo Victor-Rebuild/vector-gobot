@@ -8,9 +8,9 @@ import (
 	"math"
 	"sync"
 
-	"github.com/kercre123/vector-gobot/pkg/vbody"
 	vosk "github.com/kercre123/vosk-api/go"
 	"github.com/maxhawkins/go-webrtcvad"
+	"github.com/os-vector/vector-gobot/pkg/vbody"
 )
 
 var (

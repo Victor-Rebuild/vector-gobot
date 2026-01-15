@@ -5,8 +5,8 @@ import (
 	"math"
 	"time"
 
-	"github.com/kercre123/vector-gobot/pkg/vimu"
-	"github.com/kercre123/vector-gobot/pkg/vscreen"
+	"github.com/os-vector/vector-gobot/pkg/vimu"
+	"github.com/os-vector/vector-gobot/pkg/vscreen"
 )
 
 func main() {

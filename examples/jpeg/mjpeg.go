@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/kercre123/vector-gobot/pkg/vcam"
-	"github.com/kercre123/vector-gobot/pkg/vjpeg"
+	"github.com/os-vector/vector-gobot/pkg/vcam"
+	"github.com/os-vector/vector-gobot/pkg/vjpeg"
 )
 
 const quality = 60
