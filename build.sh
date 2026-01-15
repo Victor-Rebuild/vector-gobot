@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CC="$(pwd)/vic-toolchain/arm-linux-gnueabi/bin/arm-linux-gnueabi-gcc" \
-CGO_LDFLAGS="-L$(pwd)/build -L$(pwd)/build/libjpeg-turbo/lib" \
+CC="$(HOME)/.anki/vicos-sdk/dist/5.3.0-r07/prebuilt/bin/arm-oe-linux-gnueabi-clang" \
+CGO_LDFLAGS="-L$(pwd)/build \
 GOARM=7 \
 GOARCH=arm \
 CGO_ENABLED=1 \
-go build -o main $@
+go build -o build/main $@
