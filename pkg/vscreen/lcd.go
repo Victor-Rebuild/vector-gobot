@@ -238,7 +238,9 @@ func CreateTextImageFromLines(lines []Line) []uint16 {
 	return pixels
 }
 
-func CreateTextImageFromLinesWithCustomFont(lines []Line, bigSize float64) []uint16 {
+var fontData *opentype.Font
+
+func CreateTextImageFromLinesWithCustomFont(lines []Line, smallSize, bigSize float64) []uint16 {
 	var W, H int
 	if isMidas {
 		W = 160
@@ -253,18 +255,20 @@ func CreateTextImageFromLinesWithCustomFont(lines []Line, bigSize float64) []uin
 
 	draw.Draw(img, img.Bounds(), &image.Uniform{black}, image.Point{}, draw.Src)
 
-	fontData, err := os.ReadFile("font.ttf")
-	if err != nil {
-		panic(err)
+	if fontData == nil {
+		fontBytes, err := os.ReadFile("font.ttf")
+		if err != nil {
+			panic(err)
+		}
+
+		fontData, err = opentype.Parse(fontBytes)
+		if err != nil {
+			panic(err)
+		}
 	}
 
-	tt, err := opentype.Parse(fontData)
-	if err != nil {
-		panic(err)
-	}
-
-	normalFace, err := opentype.NewFace(tt, &opentype.FaceOptions{
-		Size:    12,
+	normalFace, err := opentype.NewFace(fontData, &opentype.FaceOptions{
+		Size:    smallSize,
 		DPI:     72,
 		Hinting: font.HintingFull,
 	})
@@ -272,7 +276,7 @@ func CreateTextImageFromLinesWithCustomFont(lines []Line, bigSize float64) []uin
 		panic(err)
 	}
 
-	bigFace, err := opentype.NewFace(tt, &opentype.FaceOptions{
+	bigFace, err := opentype.NewFace(fontData, &opentype.FaceOptions{
 		Size:    bigSize,
 		DPI:     72,
 		Hinting: font.HintingFull,
