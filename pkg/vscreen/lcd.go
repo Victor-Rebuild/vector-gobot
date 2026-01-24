@@ -10,10 +10,12 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	"os"
 	"strings"
 
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
+	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/math/fixed"
 )
 
@@ -193,6 +195,50 @@ A line is defined as:
 	}
 */
 func CreateTextImageFromLines(lines []Line) []uint16 {
+	var W int
+	var H int
+	if isMidas {
+		W = 160
+		H = 80
+	} else {
+		W = 184
+		H = 96
+	}
+	img := image.NewRGBA(image.Rect(0, 0, W, H))
+	black := color.RGBA{0, 0, 0, 255}
+	white := color.RGBA{255, 255, 255, 255}
+
+	draw.Draw(img, img.Bounds(), &image.Uniform{black}, image.Point{}, draw.Src)
+
+	d := &font.Drawer{
+		Dst:  img,
+		Src:  &image.Uniform{white},
+		Face: basicfont.Face7x13,
+		Dot:  fixed.P(0, 13),
+	}
+
+	// Wrap text
+	for _, line := range lines {
+		d.Src = &image.Uniform{line.Color}
+		d.Dot.X = 0
+		d.DrawString(line.Text)
+		d.Dot.Y += fixed.I(13)
+	}
+
+	pixels := make([]uint16, W*H)
+	for y := 0; y < H; y++ {
+		for x := 0; x < W; x++ {
+			r, g, b, _ := img.At(x, y).RGBA()
+			// Convert the color format from RGBA to RGB565
+			pixel := (r>>8&0xF8)<<8 | (g>>8&0xFC)<<3 | b>>8>>3
+			pixels[y*W+x] = uint16(pixel)
+		}
+	}
+
+	return pixels
+}
+
+func CreateTextImageFromLinesWithCustomFont(lines []Line) []uint16 {
 	var W, H int
 	if isMidas {
 		W = 160
@@ -207,32 +253,62 @@ func CreateTextImageFromLines(lines []Line) []uint16 {
 
 	draw.Draw(img, img.Bounds(), &image.Uniform{black}, image.Point{}, draw.Src)
 
-	d := &font.Drawer{
-		Dst:  img,
-		Face: basicfont.Face7x13,
-		Dot:  fixed.P(0, 13),
+	fontData, err := os.ReadFile("font.ttf")
+	if err != nil {
+		panic(err)
 	}
 
-	normalAdvance := fixed.I(13)
-	bigAdvance := fixed.I(26)
+	tt, err := opentype.Parse(fontData)
+	if err != nil {
+		panic(err)
+	}
+
+	normalFace, err := opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    12,
+		DPI:     72,
+		Hinting: font.HintingFull,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	bigFace, err := opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    24,
+		DPI:     72,
+		Hinting: font.HintingFull,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	d := &font.Drawer{
+		Dst: img,
+	}
+
+	y := 0
 
 	for _, line := range lines {
-		if int(d.Dot.Y>>6) >= H {
+		var face font.Face
+		var advance int
+
+		if line.Big {
+			face = bigFace
+			advance = 26
+		} else {
+			face = normalFace
+			advance = 13
+		}
+
+		if y+advance >= H {
 			break
 		}
 
+		d.Face = face
 		d.Src = &image.Uniform{line.Color}
-		d.Dot.X = 0
+		d.Dot = fixed.P(0, y+advance)
 
-		if line.Big {
-			d.DrawString(line.Text)
-			d.Dot.Y += fixed.I(1)
-			d.DrawString(line.Text)
-			d.Dot.Y += bigAdvance - fixed.I(1)
-		} else {
-			d.DrawString(line.Text)
-			d.Dot.Y += normalAdvance
-		}
+		d.DrawString(line.Text)
+		y += advance
 	}
 
 	pixels := make([]uint16, W*H)
