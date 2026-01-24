@@ -240,7 +240,8 @@ func CreateTextImageFromLines(lines []Line) []uint16 {
 
 var fontData *opentype.Font
 
-func CreateTextImageFromLinesWithCustomFont(lines []Line, smallSize, bigSize float64) []uint16 {
+// recommended: 12, 24, 13, 26
+func CreateTextImageFromLinesWithCustomFont(lines []Line, smallSize, bigSize float64, smallAdvance, bigAdvance int) []uint16 {
 	var W, H int
 	if isMidas {
 		W = 160
@@ -297,10 +298,10 @@ func CreateTextImageFromLinesWithCustomFont(lines []Line, smallSize, bigSize flo
 
 		if line.Big {
 			face = bigFace
-			advance = 26
+			advance = bigAdvance
 		} else {
 			face = normalFace
-			advance = 13
+			advance = smallAdvance
 		}
 
 		if y+advance >= H {
