@@ -238,7 +238,7 @@ func CreateTextImageFromLines(lines []Line) []uint16 {
 	return pixels
 }
 
-func CreateTextImageFromLinesWithCustomFont(lines []Line) []uint16 {
+func CreateTextImageFromLinesWithCustomFont(lines []Line, bigSize float64) []uint16 {
 	var W, H int
 	if isMidas {
 		W = 160
@@ -273,7 +273,7 @@ func CreateTextImageFromLinesWithCustomFont(lines []Line) []uint16 {
 	}
 
 	bigFace, err := opentype.NewFace(tt, &opentype.FaceOptions{
-		Size:    24,
+		Size:    bigSize,
 		DPI:     72,
 		Hinting: font.HintingFull,
 	})
