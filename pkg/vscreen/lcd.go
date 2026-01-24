@@ -181,6 +181,7 @@ func CreateTextImageFromSlice(lines []string) []uint16 {
 type Line struct {
 	Text  string
 	Color color.Color
+	Big   bool
 }
 
 /*
@@ -192,8 +193,7 @@ A line is defined as:
 	}
 */
 func CreateTextImageFromLines(lines []Line) []uint16 {
-	var W int
-	var H int
+	var W, H int
 	if isMidas {
 		W = 160
 		H = 80
@@ -201,32 +201,44 @@ func CreateTextImageFromLines(lines []Line) []uint16 {
 		W = 184
 		H = 96
 	}
+
 	img := image.NewRGBA(image.Rect(0, 0, W, H))
 	black := color.RGBA{0, 0, 0, 255}
-	white := color.RGBA{255, 255, 255, 255}
 
 	draw.Draw(img, img.Bounds(), &image.Uniform{black}, image.Point{}, draw.Src)
 
 	d := &font.Drawer{
 		Dst:  img,
-		Src:  &image.Uniform{white},
 		Face: basicfont.Face7x13,
 		Dot:  fixed.P(0, 13),
 	}
 
-	// Wrap text
+	normalAdvance := fixed.I(13)
+	bigAdvance := fixed.I(26)
+
 	for _, line := range lines {
+		if int(d.Dot.Y>>6) >= H {
+			break
+		}
+
 		d.Src = &image.Uniform{line.Color}
 		d.Dot.X = 0
-		d.DrawString(line.Text)
-		d.Dot.Y += fixed.I(13)
+
+		if line.Big {
+			d.DrawString(line.Text)
+			d.Dot.Y += fixed.I(1)
+			d.DrawString(line.Text)
+			d.Dot.Y += bigAdvance - fixed.I(1)
+		} else {
+			d.DrawString(line.Text)
+			d.Dot.Y += normalAdvance
+		}
 	}
 
 	pixels := make([]uint16, W*H)
 	for y := 0; y < H; y++ {
 		for x := 0; x < W; x++ {
 			r, g, b, _ := img.At(x, y).RGBA()
-			// Convert the color format from RGBA to RGB565
 			pixel := (r>>8&0xF8)<<8 | (g>>8&0xFC)<<3 | b>>8>>3
 			pixels[y*W+x] = uint16(pixel)
 		}
